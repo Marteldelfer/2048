@@ -55,7 +55,8 @@ function move(grid, direction) {
                     grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
                     grid[Math.floor(i/4)][i%4] = 0;
                 }
-            }
+            } break;
+
         case "left":
             // to the left
             for (let i = 15; i > 0; i--) {
@@ -69,7 +70,26 @@ function move(grid, direction) {
                     grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
                     grid[Math.floor(i/4)][i%4] = 0;
                 }
-            }
+            } break;
+
+        case "down":
+
+            for (let i = 0; i < 15; i++) {
+                j = i + 1;
+                // try to combine
+                if (grid[i%4][Math.floor(i/4)] == (grid[j%4][Math.floor(j/4)]) && !Number.isInteger((j/4))) {
+                    grid[i%4][Math.floor(i/4)] = 0;
+                    grid[j%4][Math.floor(j/4)] *= 2;
+                } else if (grid[j%4][Math.floor(j/4)] == 0 && !Number.isInteger((j/4))) {
+                    // try to move
+                    grid[j%4][Math.floor(j/4)] = grid[i%4][Math.floor(i/4)];
+                    grid[i%4][Math.floor(i/4)] = 0;
+                }
+            } break;
+
+        case "up":
+            // try to combine
+
     }
 }
 
@@ -80,6 +100,7 @@ document.addEventListener('keydown', function(event) {
 
     switch (event.key) {
         case "ArrowDown":
+            move(grid, 'down')
             break;
         case "ArrowUp":
             // TODO up()
