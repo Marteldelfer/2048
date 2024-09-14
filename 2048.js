@@ -1,4 +1,4 @@
-let grid = [
+const grid = [
     [0,0,0,0],
     [0,0,0,0],
     [0,0,0,0],
@@ -89,6 +89,53 @@ function move(grid, direction) {
                     }
                 }
             }
+            break;
+            case 'left':
+                //same as right, except it goes from left to right
+                for (row of grid) {
+                    for (let index = 0; index < 4; index++) {
+                        //ignore zeros
+                        if (row[index] == 0) {
+                            continue;
+                        }
+                        for (let comp = 0; comp < 4; comp++) {
+                            //cant combine with itself nor to the right
+                            if (comp <= index) {
+                                continue;
+                            }
+                            //combining
+                            if (row[index] == row[comp]) {
+                                row[index] *= 2;
+                                row[comp] = 0;
+                                break;
+                            }
+                            //if number is not zero nor equal, break
+                            if (row[comp] > 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                //then, move the numbers
+                for (row of grid) {
+                    for (let index = 0; index < 4; index++) {
+                        //cant replace if not zero
+                        if (row[index] != 0) {
+                            continue;
+                        }
+                        for (let comp = 0; comp < 4; comp++) {
+                            //only move numbers fromr the left
+                            if (comp <= index) {
+                                continue;
+                            }
+                            //moving the numbers
+                            if (row[comp] > row[index]) {
+                                row[index] = row[comp];
+                                row[comp] = 0;
+                            }
+                        }
+                    }
+                }
             break;
     }
 }
