@@ -37,22 +37,39 @@ function update(grid) {
     }
 }
 
-function move(grid) {
+function move(grid, direction) {
 
     let j;
-    // first, to the right
-    for (let i = 0; i < 15; i++) {
-        j = i + 1
-        // try to combine
-        if (grid[Math.floor(i/4)][i%4] == grid[Math.floor(j/4)][j%4] && !Number.isInteger((j/4))) {
-            grid[Math.floor(i/4)][i%4] = 0;
-            grid[Math.floor(j/4)][j%4] *= 2;
-        } else if (grid[Math.floor(j/4)][j%4] == 0 && !Number.isInteger((j/4))) {
-            //try to move
-            grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
-            grid[Math.floor(i/4)][i%4] = 0;
-        }
 
+    switch (direction) {
+        case "right":
+            // first, to the right
+            for (let i = 0; i < 15; i++) {
+                j = i + 1
+                // try to combine
+                if (grid[Math.floor(i/4)][i%4] == grid[Math.floor(j/4)][j%4] && !Number.isInteger((j/4))) {
+                    grid[Math.floor(i/4)][i%4] = 0;
+                    grid[Math.floor(j/4)][j%4] *= 2;
+                } else if (grid[Math.floor(j/4)][j%4] == 0 && !Number.isInteger((j/4))) {
+                    //try to move
+                    grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
+                    grid[Math.floor(i/4)][i%4] = 0;
+                }
+            }
+        case "left":
+            // to the left
+            for (let i = 15; i > 0; i--) {
+                j = i - 1
+                // try to combine
+                if (grid[Math.floor(i/4)][i%4] == grid[Math.floor(j/4)][j%4] && !Number.isInteger((i/4))) {
+                    grid[Math.floor(i/4)][i%4] = 0;
+                    grid[Math.floor(j/4)][j%4] *= 2;
+                } else if (grid[Math.floor(j/4)][j%4] == 0 && !Number.isInteger((i/4))) {
+                    //try to move
+                    grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
+                    grid[Math.floor(i/4)][i%4] = 0;
+                }
+            }
     }
 }
 
@@ -63,21 +80,19 @@ document.addEventListener('keydown', function(event) {
 
     switch (event.key) {
         case "ArrowDown":
-            addNumber(grid);
-            update(grid);
             break;
         case "ArrowUp":
             // TODO up()
             break;
-            // TODO left()
         case "ArrowLeft":
+            move(grid, 'left');
             break;
         case "ArrowRight":
-            move(grid);
-            addNumber(grid)
-            update(grid);
+            move(grid, 'right');
             break;
         default:
-            return;
+            return;        
     }
+    addNumber(grid);
+    update(grid);
 })
