@@ -42,54 +42,54 @@ function move(grid, direction) {
     let j;
 
     switch (direction) {
-        case "right":
-            // first, to the right
-            for (let i = 0; i < 15; i++) {
-                j = i + 1
-                // try to combine
-                if (grid[Math.floor(i/4)][i%4] == grid[Math.floor(j/4)][j%4] && !Number.isInteger((j/4))) {
-                    grid[Math.floor(i/4)][i%4] = 0;
-                    grid[Math.floor(j/4)][j%4] *= 2;
-                } else if (grid[Math.floor(j/4)][j%4] == 0 && !Number.isInteger((j/4))) {
-                    //try to move
-                    grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
-                    grid[Math.floor(i/4)][i%4] = 0;
+        
+        case 'right':
+            //first, combining the squares
+            for (row of grid) {
+                for (let index = 3; index > -1; index--) {
+                    //ignore zeros
+                    if (row[index] == 0) {
+                        continue;
+                    }
+                    for (let comp = 3; comp > -1; comp--) {
+                        //cant combine with itself nor to the right
+                        if (comp >= index) {
+                            continue;
+                        }
+                        //combining
+                        if (row[index] == row[comp]) {
+                            row[index] *= 2;
+                            row[comp] = 0;
+                            break;
+                        }
+                        //if number is not zero nor equal, break
+                        if (row[comp] > 0) {
+                            break;
+                        }
+                    }
                 }
-            } break;
-
-        case "left":
-            // to the left
-            for (let i = 15; i > 0; i--) {
-                j = i - 1
-                // try to combine
-                if (grid[Math.floor(i/4)][i%4] == grid[Math.floor(j/4)][j%4] && !Number.isInteger((i/4))) {
-                    grid[Math.floor(i/4)][i%4] = 0;
-                    grid[Math.floor(j/4)][j%4] *= 2;
-                } else if (grid[Math.floor(j/4)][j%4] == 0 && !Number.isInteger((i/4))) {
-                    //try to move
-                    grid[Math.floor(j/4)][j%4] = grid[Math.floor(i/4)][i%4];
-                    grid[Math.floor(i/4)][i%4] = 0;
+            }
+            //then, move the numbers
+            for (row of grid) {
+                for (let index = 3; index > -1; index--) {
+                    //cant replace if not zero
+                    if (row[index] != 0) {
+                        continue;
+                    }
+                    for (let comp = 3; comp > -1; comp--) {
+                        //only move numbers fromr the left
+                        if (comp >= index) {
+                            continue;
+                        }
+                        //moving the numbers
+                        if (row[comp] > row[index]) {
+                            row[index] = row[comp];
+                            row[comp] = 0;
+                        }
+                    }
                 }
-            } break;
-
-        case "down":
-
-            for (let i = 0; i < 15; i++) {
-                j = i + 1;
-                // try to combine
-                if (grid[i%4][Math.floor(i/4)] == (grid[j%4][Math.floor(j/4)]) && !Number.isInteger((j/4))) {
-                    grid[i%4][Math.floor(i/4)] = 0;
-                    grid[j%4][Math.floor(j/4)] *= 2;
-                } else if (grid[j%4][Math.floor(j/4)] == 0 && !Number.isInteger((j/4))) {
-                    // try to move
-                    grid[j%4][Math.floor(j/4)] = grid[i%4][Math.floor(i/4)];
-                    grid[i%4][Math.floor(i/4)] = 0;
-                }
-            } break;
-
-        case "up":
-            // try to combine
-
+            }
+            break;
     }
 }
 
@@ -103,7 +103,7 @@ document.addEventListener('keydown', function(event) {
             move(grid, 'down')
             break;
         case "ArrowUp":
-            // TODO up()
+            move(grid, 'up')
             break;
         case "ArrowLeft":
             move(grid, 'left');
