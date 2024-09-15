@@ -9,6 +9,9 @@ const colors = ['#EEE4DA', '#EEE1C9', '#F2B27A', '#F69664', '#F77C5F', '#F55F3B'
     '#EDD073', '#EDCC62', '#EDC950', '#EDC53F', '#EDC22E'
 ]
 
+addNumber(grid);
+update(grid);
+
 function addNumber(grid) {
     // first, count the 0s
     let count = 0;
@@ -39,7 +42,7 @@ function update(grid) {
         let square = document.getElementById(id);
         if (grid[Math.floor(i/4)][i%4] == 0) {
             square.innerText = '';
-            square.style.background = 'transparent';
+            square.style.background = 'rgba(238, 228, 218, 0.35)';
             continue;
         } else if (grid[Math.floor(i/4)][i%4] < 8){
             square.style.color = '#776e65';
@@ -246,27 +249,101 @@ function move(grid, direction) {
     }
 }
 
+function isStuck(grid, x, y) {
+    
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            let lineindex = i + y;
+            let colindex = j + x;
+
+            //ignore zeros
+            if (grid[i][j] == 0) {
+                continue;
+            }
+
+            if (x != 0) {
+                //out of bounds
+                if (colindex < 0 || colindex > 3) {
+                    continue;
+                }
+                //can combine or move
+                if (grid[i][colindex] == 0 || grid[i][colindex] == grid[i][j]) {
+                    return false;
+                }
+            } else {
+                //out of bounds
+                if (lineindex < 0 || lineindex > 3) {
+                    continue;
+                }
+                //can combine or move
+                if (grid[lineindex][j] == 0 || grid[lineindex][j] == grid[i][j]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+function isLocked(grid) {
+    if (!isStuck(grid, 1, 0)) {
+        return false;
+    }
+    if (!isStuck(grid, -1, 0)) {
+        return false;
+    }
+    if (!isStuck(grid, 0, 1)) {
+        return false;
+    }
+    if (!isStuck(grid, 0, -1)) {
+        return false;
+    }
+    return true;
+}
+
 document.addEventListener('keydown', function(event) {
+
     if (event.defaultPrevented) {
         return;
     }
 
+    let stuck = true;
+
     switch (event.key) {
         case "ArrowDown":
-            move(grid, 'down')
-            break;
+            if (!isStuck(grid, 0, 1)) {
+            move(grid, 'down');
+            stuck = false;
+        }
+        break;
         case "ArrowUp":
-            move(grid, 'up')
-            break;
+            if (!isStuck(grid, 0, -1)) {
+            move(grid, 'up');
+            stuck = false;
+        }
+        break;
         case "ArrowLeft":
+            if (!isStuck(grid, -1, 0)) {
             move(grid, 'left');
-            break;
+            stuck = false;
+        }
+        break;
         case "ArrowRight":
+            if (!isStuck(grid, 1, 0)) {
             move(grid, 'right');
-            break;
+            stuck = false;
+        }
+        break;
         default:
             return;        
     }
-    addNumber(grid);
+    if (!stuck) {
+        addNumber(grid);
+    }
+
     update(grid);
+
+    if (isLocked(grid)) {
+        alert("Game Over")
+    }
 })
