@@ -6,6 +6,7 @@ body {
     margin: 20px auto;
     width: 420px;
     text-align: center;
+    color: #776e65;
 }
 header {
     font-size: 40px;
@@ -23,9 +24,10 @@ main {
 .square {
     width: 90px;
     height: 90px;
+    line-height: 90px;
     margin-right: 13px;
     border-radius: 3px;
-    background: wheat;
+    background: rgba(238, 228, 218, 0.35);
     font-weight: bold;
     font-size: 40px;
     float: left;

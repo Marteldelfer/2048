@@ -5,6 +5,10 @@ const grid = [
     [0,0,0,0]
 ];
 
+const colors = ['#EEE4DA', '#EEE1C9', '#F2B27A', '#F69664', '#F77C5F', '#F55F3B',
+    '#EDD073', '#EDCC62', '#EDC950', '#EDC53F', '#EDC22E'
+]
+
 function addNumber(grid) {
     // first, count the 0s
     let count = 0;
@@ -33,7 +37,17 @@ function update(grid) {
     for (let i = 0; i < 16; i++) {
         id = `${Math.floor(i/4) + 1}-${i%4 + 1}`;
         let square = document.getElementById(id);
+        if (grid[Math.floor(i/4)][i%4] == 0) {
+            square.innerText = '';
+            square.style.background = 'transparent';
+            continue;
+        } else if (grid[Math.floor(i/4)][i%4] < 8){
+            square.style.color = '#776e65';
+        } else {
+            square.style.color = 'white';
+        }
         square.innerText = grid[Math.floor(i/4)][i%4];
+        square.style.background = colors[Math.log2(grid[Math.floor(i/4)][i%4]) - 1];
     }
 }
 
@@ -80,7 +94,7 @@ function move(grid, direction) {
                             continue;
                         }
                         //moving the numbers
-                        if (row[comp] > row[index]) {
+                        if (row[index] == 0) {
                             row[index] = row[comp];
                             row[comp] = 0;
                         }
@@ -127,7 +141,7 @@ function move(grid, direction) {
                                 continue;
                             }
                             //moving the numbers
-                            if (row[comp] > row[index]) {
+                            if (row[index] == 0) {
                                 row[index] = row[comp];
                                 row[comp] = 0;
                             }
@@ -175,7 +189,7 @@ function move(grid, direction) {
                                 continue;
                             }
                             // move
-                            if (grid[comp][colindex] > grid[index][colindex]) {
+                            if (grid[index][colindex] == 0) {
                                 grid[index][colindex] = grid[comp][colindex];
                                 grid[comp][colindex] = 0;
                             }
@@ -222,7 +236,7 @@ function move(grid, direction) {
                                 continue;
                             }
                             // move
-                            if (grid[comp][colindex] > grid[index][colindex]) {
+                            if (grid[index][colindex] == 0) {
                                 grid[index][colindex] = grid[comp][colindex];
                                 grid[comp][colindex] = 0;
                             }
