@@ -39,8 +39,6 @@ function update(grid) {
 
 function move(grid, direction) {
 
-    let j;
-
     switch (direction) {
         
         case 'right':
@@ -137,6 +135,100 @@ function move(grid, direction) {
                     }
                 }
             break;
+            case 'up':
+                //same logic as the others, but row and col are reversed
+                //combining
+                for (let colindex = 0; colindex < 4; colindex++) {
+                    for (let index = 0; index < 4; index++) {
+                        //ignore the zeros
+                        if (grid[index][colindex] == 0) {
+                            continue;
+                        }
+                        for (let comp = 0; comp < 4; comp++) {
+                            //cant combine with itself nor downward
+                            if (comp <= index) {
+                                continue;
+                            }
+                            //combine
+                            if (grid[index][colindex] == grid[comp][colindex]) {
+                                grid[index][colindex] *= 2;
+                                grid[comp][colindex] = 0;
+                                break;
+                            }
+                            //if not equal nor zero, break
+                            if (grid[comp][colindex] > 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                //move the squares
+                for (let colindex = 0; colindex < 4; colindex++) {
+                    for (let index = 0; index < 4; index++) {
+                        //cant move to if not zero
+                        if (grid[index][colindex] != 0) {
+                            continue;
+                        }
+                        for (let comp = 0; comp < 4; comp++) {
+                            // only compare upwards
+                            if (comp <= index) {
+                                continue;
+                            }
+                            // move
+                            if (grid[comp][colindex] > grid[index][colindex]) {
+                                grid[index][colindex] = grid[comp][colindex];
+                                grid[comp][colindex] = 0;
+                            }
+                        }
+                    }
+                }
+            break;
+            case 'down':
+                //combining
+                for (let colindex = 3; colindex > -1; colindex--) {
+                    for (let index = 3; index > -1; index--) {
+                        //ignore the zeros
+                        if (grid[index][colindex] == 0) {
+                            continue;
+                        }
+                        for (let comp = 3; comp > -1; comp--) {
+                            //cant combine with itself nor downward
+                            if (comp >= index) {
+                                continue;
+                            }
+                            //combine
+                            if (grid[index][colindex] == grid[comp][colindex]) {
+                                grid[index][colindex] *= 2;
+                                grid[comp][colindex] = 0;
+                                break;
+                            }
+                            //if not equal nor zero, break
+                            if (grid[comp][colindex] > 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                //move the squares
+                for (let colindex = 3; colindex > -1; colindex--) {
+                    for (let index = 3; index > -1; index--) {
+                        //cant move to if not zero
+                        if (grid[index][colindex] != 0) {
+                            continue;
+                        }
+                        for (let comp = 3; comp > -1; comp--) {
+                            // only compare upwards
+                            if (comp >= index) {
+                                continue;
+                            }
+                            // move
+                            if (grid[comp][colindex] > grid[index][colindex]) {
+                                grid[index][colindex] = grid[comp][colindex];
+                                grid[comp][colindex] = 0;
+                            }
+                        }
+                    }
+                }
     }
 }
 
