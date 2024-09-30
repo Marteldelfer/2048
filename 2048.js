@@ -347,3 +347,74 @@ document.addEventListener('keydown', function(event) {
         alert("Game Over")
     }
 })
+
+
+// for cellphones
+document.addEventListener('touchstart', handleTouchStart, false);        
+document.addEventListener('touchmove', handleTouchMove, false);
+
+var xDown = null;                                                        
+var yDown = null;
+
+function getTouches(evt) {
+  return evt.touches ||             // browser API
+         evt.originalEvent.touches; // jQuery
+}                                                     
+                                                                         
+function handleTouchStart(evt) {
+    const firstTouch = getTouches(evt)[0];                                      
+    xDown = firstTouch.clientX;                                      
+    yDown = firstTouch.clientY;                                      
+};                                                
+  
+function handleTouchMove(evt) {
+    if ( ! xDown || ! yDown ) {
+        return;
+    }
+
+    var xUp = evt.touches[0].clientX;                                    
+    var yUp = evt.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    let stuck = true;
+                                                                         
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        if ( xDiff > 0 ) {
+            if (!isStuck(grid, -1, 0)) {
+                move(grid, 'left');
+                stuck = false;
+            }
+        } else {
+            if (!isStuck(grid, 1, 0)) {
+                move(grid, 'right');
+                stuck = false;
+            }
+        }                       
+    } else {
+        if ( yDiff > 0 ) {
+            if (!isStuck(grid, 0, -1)) {
+                move(grid, 'up');
+                stuck = false;
+            }
+        } else { 
+            if (!isStuck(grid, 0, 1)) {
+                move(grid, 'down');
+                stuck = false;
+            }
+        }                                                               
+    }
+    if (!stuck) {
+        addNumber(grid);
+    }
+
+    update(grid);
+
+    if (isLocked(grid)) {
+        alert("Game Over")
+    }
+    /* reset values */
+    xDown = null;
+    yDown = null;                                             
+};
